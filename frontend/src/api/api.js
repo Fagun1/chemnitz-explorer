@@ -14,9 +14,15 @@ const api = axios.create({
 // Request interceptor for adding auth token
 api.interceptors.request.use(
   (config) => {
+    // Ensure all requests include /api prefix if not already present
+    if (!config.url.startsWith('/api/') && !config.url.startsWith('http')) {
+      config.url = `/api${config.url.startsWith('/') ? '' : '/'}${config.url}`;
+    }
+    
     console.log('API Request:', { 
       url: config.url, 
-      method: config.method
+      method: config.method,
+      baseURL: config.baseURL
     });
     
     const token = localStorage.getItem('token');
