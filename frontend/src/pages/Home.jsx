@@ -72,12 +72,38 @@ const HomePage = () => {
       </div>
 
       <div className="mb-8 rounded-lg shadow-lg overflow-hidden">
-        <MapDisplay sites={displaySites} className="h-[500px] md:h-[600px] w-full" />
+        {loading ? (
+          <div className="h-[500px] md:h-[600px] w-full flex items-center justify-center bg-gray-50">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <MapDisplay sites={displaySites} className="h-[500px] md:h-[600px] w-full" />
+        )}
       </div>
 
       <div>
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Featured Sites</h2>
-        {displaySites.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
+                <div className="h-20 bg-gray-200 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-8">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              Retry
+            </button>
+          </div>
+        ) : displaySites.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displaySites.slice(0, 6).map((site) => (
               <SiteCard key={site._id} site={site} />
@@ -86,7 +112,7 @@ const HomePage = () => {
         ) : (
           <p className="text-gray-600 text-center py-8">No cultural sites found at the moment.</p>
         )}
-        {displaySites.length > 6 && (
+        {!loading && displaySites.length > 6 && (
           <div className="text-center mt-8">
             <Link 
               to="/sites"

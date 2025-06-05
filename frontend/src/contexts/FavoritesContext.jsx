@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/api';
+import { useAuth } from './AuthContext';
 
 const FavoritesContext = createContext({
   favorites: [],
@@ -22,9 +23,15 @@ export const FavoritesProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const fetchFavorites = async () => {
+      if (!isAuthenticated) {
+        setFavorites([]);
+        return;
+      }
+
       try {
         setLoading(true);
         const response = await api.get('/favorites');
@@ -39,7 +46,7 @@ export const FavoritesProvider = ({ children }) => {
     };
 
     fetchFavorites();
-  }, []);
+  }, [isAuthenticated]);
 
   const addFavorite = async (siteId) => {
     try {
