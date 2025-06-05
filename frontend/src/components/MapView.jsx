@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import api from '../api/api';
 import { Link } from 'react-router-dom';
-import { FaHeart, FaRegHeart, FaLocationArrow } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaLocationArrow, FaChevronDown } from 'react-icons/fa';
 import useFavorites from '../hooks/useFavorites';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -100,6 +100,7 @@ const MapView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user } = useAuth();
   const { addFavorite, removeFavorite, isFavorited } = useFavorites();
   const [userLocation, setUserLocation] = useState(null);
@@ -217,7 +218,56 @@ const MapView = () => {
         </div>
         
         <div className="flex flex-col lg:flex-row gap-6 flex-grow">
-          <div className="lg:w-72 flex-shrink-0">
+          {/* Mobile Dropdown */}
+          <div className="lg:hidden relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full bg-white rounded-xl shadow-lg p-4 flex items-center justify-between"
+            >
+              <span className="font-semibold text-gray-800">
+                {selectedCategory || 'All Categories'}
+              </span>
+              <FaChevronDown className={`transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg z-20">
+                <div className="p-2">
+                  <button
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full p-3 rounded-lg text-left transition-all ${
+                      selectedCategory === null
+                        ? 'bg-blue-50 text-blue-700 font-medium shadow-sm'
+                        : 'hover:bg-gray-50 text-gray-700'
+                    }`}
+                  >
+                    All Categories
+                  </button>
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => {
+                        handleCategoryClick(category);
+                        setIsDropdownOpen(false);
+                      }}
+                      className={`w-full p-3 rounded-lg text-left transition-all ${
+                        selectedCategory === category
+                          ? 'bg-blue-50 text-blue-700 font-medium shadow-sm'
+                          : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Sidebar */}
+          <div className="hidden lg:block lg:w-72 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-lg p-6 sticky top-[calc(4rem+1rem)]">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold text-gray-800">Categories</h3>
@@ -257,7 +307,7 @@ const MapView = () => {
                 <FaLocationArrow className="mr-2" /> Show My Location
               </button>
             </div>
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden flex-grow z-10">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden flex-grow z-10 h-[calc(100vh-24rem)] md:h-[calc(100vh-16rem)]">
               <MapContainer
                 center={[50.8278, 12.9242]}
                 zoom={13}
