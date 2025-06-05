@@ -33,19 +33,15 @@ const SiteCard = ({ site }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      {site.imageUrl && (
-        <div className="relative">
-          <img
-            src={site.imageUrl}
-            alt={site.name}
-            className="w-full h-48 object-cover"
-          />
+      <div className="p-4">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-xl font-semibold text-gray-800">{site.name}</h3>
           <button
             onClick={handleFavoriteClick}
-            className={`absolute top-2 right-2 p-2 rounded-full ${
+            className={`p-2 rounded-full ${
               isFavorited(site._id)
-                ? 'bg-red-500 text-white'
-                : 'bg-white text-gray-600 hover:text-red-500'
+                ? 'text-red-500'
+                : 'text-gray-400 hover:text-red-500'
             } transition-colors`}
             disabled={favoriteLoading}
             title={user ? (isFavorited(site._id) ? 'Remove from favorites' : 'Add to favorites') : 'Login to add favorites'}
@@ -59,9 +55,6 @@ const SiteCard = ({ site }) => {
             )}
           </button>
         </div>
-      )}
-      <div className="p-4">
-        <h3 className="text-xl font-semibold mb-1 text-gray-800">{site.name}</h3>
         <p className="text-sm text-gray-500 mb-2">{site.category}</p>
         <p className="text-gray-700 text-sm mb-3 truncate">
           {site.description.substring(0, 100)}{site.description.length > 100 && '...'}

@@ -56,30 +56,24 @@ const SiteDetails = ({ site }) => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Hero Section with Image */}
-          {site.imageUrl && (
-            <div className="relative h-96">
-              <img
-                src={site.imageUrl}
-                alt={site.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h1 className="text-4xl font-bold mb-2">{site.name}</h1>
+          {/* Header Section */}
+          <div className="p-6 bg-gradient-to-r from-blue-600 to-blue-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-4xl font-bold text-white mb-2">{site.name}</h1>
                 <div className="flex items-center space-x-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white">
                     <FaMapMarkerAlt className="mr-2" />
                     {site.category}
                   </span>
                   {site && site._id && (
                     <button
                       onClick={handleFavoriteClick}
-                      className="inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors"
+                      className="inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors text-white"
                     >
                       {isFavorited(site._id) ? (
                         <>
-                          <FaHeart className="mr-2 text-red-500" />
+                          <FaHeart className="mr-2 text-red-300" />
                           <span>Favorited</span>
                         </>
                       ) : (
@@ -93,7 +87,7 @@ const SiteDetails = ({ site }) => {
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Content Section */}
           <div className="p-6">
